@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071a24">
+<meta name="description" content="Sparrow Africa multi-currency wallet prototype">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Sparrow Africa</title>
+<style>
+:root{--bg:#071a24;--panel:#102a35;--panel2:#153541;--green:#39d6a0;--muted:#91aab2;--white:#f3fbfa;--line:#244652;--red:#ff7d7d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#071a24,#0b2730 65%,#09201f);color:var(--white);font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer;border:0}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top) 16px calc(88px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 2px 18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}.logo{width:38px;height:38px;border-radius:13px;background:var(--green);color:#06241d;display:grid;place-items:center;font-weight:900;font-size:21px}
+.avatar{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:var(--panel)}
+.eyebrow{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1.3px}
+h1{font-size:27px;margin:5px 0 2px}.sub{color:var(--muted);font-size:13px}
+.hero{background:linear-gradient(135deg,#174a46,#10353d 65%,#102a35);border:1px solid #2b6559;border-radius:24px;padding:22px;margin:12px 0 18px;box-shadow:0 15px 35px #0003}
+.balance-label{display:flex;justify-content:space-between;align-items:center;color:#c4ded8;font-size:13px}.balance{font-size:34px;font-weight:800;letter-spacing:-1px;margin:12px 0 4px}.balance small{font-size:15px;color:#c4ded8;font-weight:500}
+.pill{font-size:11px;border:1px solid #458a76;color:#9ef0ce;border-radius:20px;padding:5px 9px}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 22px}
+.action{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:13px 5px;color:var(--white);display:flex;align-items:center;flex-direction:column;gap:8px;font-size:12px}
+.action b{background:#1b4850;color:var(--green);width:35px;height:35px;border-radius:12px;display:grid;place-items:center;font-size:18px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 11px}.section-head h2{font-size:16px;margin:0}.section-head span{color:var(--green);font-size:12px}
+.wallets{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wallet{background:var(--panel);border:1px solid var(--line);padding:14px;border-radius:17px}.wallet-top{display:flex;justify-content:space-between;align-items:center}.coin{font-size:12px;color:var(--muted)}.flag{font-size:19px}.amount{font-weight:750;font-size:18px;margin-top:12px}.wallet small{color:var(--muted);font-size:11px}
+.notice{background:#302d1c;border:1px solid #63552c;color:#f3d88c;border-radius:13px;padding:12px;font-size:12px;line-height:1.5;margin:18px 0}
+.transaction{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}.tx-icon{width:39px;height:39px;border-radius:13px;background:var(--panel2);display:grid;place-items:center;color:var(--green);font-size:18px}.tx-main{flex:1}.tx-main b{display:block;font-size:13px}.tx-main small{color:var(--muted);font-size:11px}.tx-amount{text-align:right;font-weight:700;font-size:13px}.tx-amount small{display:block;color:var(--muted);font-weight:400}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:#081d27ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));z-index:5}
+nav button{background:none;color:var(--muted);font-size:11px;display:flex;align-items:center;flex-direction:column;gap:4px;padding:5px}nav button strong{font-size:19px}nav button.active{color:var(--green)}
+.view{display:none}.view.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:17px;margin:12px 0}
+label{display:block;color:var(--muted);font-size:12px;margin:13px 0 6px}input,select{width:100%;background:#081f29;border:1px solid var(--line);border-radius:12px;padding:13px;color:var(--white);outline:none}
+.primary{width:100%;padding:14px;border-radius:13px;background:var(--green);color:#05251d;font-weight:800;margin-top:16px}.secondary{background:#173b44;color:var(--white);border:1px solid var(--line);padding:11px 13px;border-radius:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.rate{color:var(--muted);font-size:12px;margin-top:9px}.status{display:inline-block;border-radius:20px;padding:4px 8px;background:#473c1d;color:#f0d88b;font-size:10px}
+.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#e8fff6;color:#08281f;padding:12px 16px;border-radius:12px;box-shadow:0 8px 30px #0005;display:none;z-index:10;font-size:13px;max-width:90%;text-align:center}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;justify-content:center;z-index:9}.modal.show{display:flex}.sheet{background:#0e2934;border:1px solid var(--line);border-radius:23px 23px 0 0;width:min(520px,100%);padding:22px 18px calc(24px + env(safe-area-inset-bottom));max-height:85vh;overflow:auto}.sheet h2{margin:0 0 5px}.close{float:right;background:#193b45;color:white;border-radius:50%;width:32px;height:32px}
+.empty{color:var(--muted);text-align:center;padding:25px 10px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="logo">S</div><span>SPARROW <span style="color:var(--green)">AFRICA</span></span></div><div class="avatar">👤</div></header>
+
+<section id="home" class="view active">
+<div class="eyebrow">Good day</div><h1>Your money, connected.</h1><div class="sub">A simpler way to view multiple currencies.</div>
+<div class="hero"><div class="balance-label"><span>Total demo portfolio</span><span class="pill">● TEST MODE</span></div><div class="balance" id="portfolio">US$ 1,000.00</div><div class="sub">Illustrative value · Not withdrawable</div></div>
+<div class="actions">
+<button class="action" onclick="openModal('send')"><b>↗</b>Send</button>
+<button class="action" onclick="openModal('convert')"><b>⇄</b>Convert</button>
+<button class="action" onclick="openModal('cashout')"><b>↓</b>Cash out</button>
+<button class="action" onclick="openModal('p2p')"><b>⇆</b>P2P</button>
+</div>
+<div class="section-head"><h2>Your wallets</h2><span onclick="showView('wallets')">View all</span></div>
+<div class="wallets" id="homeWallets"></div>
+<div class="notice">Demo environment only. Balances, rates and transactions are simulated. No real money is held or transferred.</div>
+<div class="section-head"><h2>Recent activity</h2><span onclick="showView('activity')">See all</span></div>
+<div id="recent"></div>
+</section>
+
+<section id="wallets" class="view">
+<div class="eyebrow">Your accounts</div><h1>Wallets</h1><div class="sub">Demo balances across four currencies.</div>
+<div class="wallets" id="allWallets" style="margin-top:18px"></div>
+<div class="card"><b>Wallet information</b><p class="sub">Wallet balances are stored only in this browser for this prototype. Clearing browser data may reset them.</p></div>
+</section>
+
+<section id="activity" class="view">
+<div class="eyebrow">Your records</div><h1>Activity</h1><div class="sub">Simulated transactions created on this device.</div><div id="allTx" style="margin-top:16px"></div>
+</section>
+
+<section id="profile" class="view">
+<div class="eyebrow">Account centre</div><h1>Profile & security</h1>
+<div class="card"><div style="display:flex;justify-content:space-between"><b>Identity verification</b><span class="status">Demo only</span></div><p class="sub">KYC is not connected. No identity documents have been checked.</p><button class="secondary" onclick="toast('KYC provider not connected in this test app.')">View verification</button></div>
+<div class="card"><b>Security settings</b><p class="sub">Production authentication, PIN and biometric verification are not enabled in this prototype.</p><button class="secondary" onclick="toast('Security provider is not connected yet.')">Security options</button></div>
+<div class="card"><b>Payment connections</b><p class="sub">Bank and mobile-money accounts are not connected.</p><button class="secondary" onclick="toast('No payment providers connected.')">Manage connections</button></div>
+<div class="card"><b>About Sparrow Africa</b><p class="sub">Prototype build · Version 0.1 · Test mode</p><p class="sub">This app is not a bank, payment institution, exchange or crypto custodian.</p></div>
+</section>
+</div>
+<nav>
+<button class="active" data-view="home" onclick="showView('home')"><strong>⌂</strong>Home</button>
+<button data-view="wallets" onclick="showView('wallets')"><strong>▣</strong>Wallets</button>
+<button data-view="activity" onclick="showView('activity')"><strong>↻</strong>Activity</button>
+<button data-view="profile" onclick="showView('profile')"><strong>☻</strong>Profile</button>
+</nav>
+<div id="toast" class="toast"></div>
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+<script>
+const defaults={USD:1000,NGN:150000,MUR:25000,USDT:250};
+let balances={...defaults};let transactions=[];
+const currencyMeta={USD:['🇺🇸','US Dollar'],NGN:['🇳🇬','Nigerian Naira'],MUR:['🇲🇺','Mauritian Rupee'],USDT:['₮','Tether (demo)']};
+// Illustrative rates only: 1 USD = 1500 NGN, 1 USD = 46 MUR, 1 USD = 1 USDT
+const usdRates={USD:1,NGN:1500,MUR:46,USDT:1};
+function money(v,c){return new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v)+' '+c}
+function usdValue(){return Object.entries(balances).reduce((s,[c,v])=>s+v/usdRates[c],0)}
+function renderWallets(){let html=Object.keys(balances).map(c=>`<div class="wallet"><div class="wallet-top"><span class="coin">${c}</span><span class="flag">${currencyMeta[c][0]}</span></div><div class="amount">${money(balances[c],c)}</div><small>${currencyMeta[c][1]}</small></div>`).join('');document.getElementById('homeWallets').innerHTML=html;document.getElementById('allWallets').innerHTML=html;document.getElementById('portfolio').textContent='US$ '+usdValue().toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function renderTx(){let html=transactions.length?transactions.map(t=>`<div class="transaction"><div class="tx-icon">${t.icon}</div><div class="tx-main"><b>${t.title}</b><small>${t.date} · <span class="status">Test</span></small></div><div class="tx-amount">${t.amount}<small>${t.note}</small></div></div>`).join(''):'<div class="empty">No transactions yet. Try a demo conversion.</div>';document.getElementById('recent').innerHTML=html;document.getElementById('allTx').innerHTML=html}
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));window.scrollTo(0,0)}
+function toast(s){let el=document.getElementById('toast');el.textContent=s;el.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.style.display='none',2600)}
+function openModal(type){let content=document.getElementById('modalContent');let title={convert:'Convert currencies',send:'Send money · demo',cashout:'Cash out · demo',p2p:'P2P escrow · demo'}[type];let currencies=Object.keys(balances).map(c=>`<option>${c}</option>`).join('');
+let body='';
+if(type==='convert')body=`<label>From</label><select id="from">${currencies}</select><label>To</label><select id="to">${currencies}</select><label>Amount</label><input id="amount" type="number" min="0.01" step="0.01" placeholder="Enter amount"><div class="rate">Illustrative fixed demo rates. Not live market quotes.</div><button class="primary" onclick="convert()">Preview conversion</button>`;
+if(type==='send')body=`<label>Recipient name</label><input id="recipient" placeholder="e.g. Alex"><label>Recipient currency</label><select id="sendCurrency">${currencies}</select><label>Amount</label><input id="sendAmount" type="number" min="0.01" placeholder="Amount"><button class="primary" onclick="sendDemo()">Create test transfer</button>`;
+if(type==='cashout')body=`<label>Cash-out currency</label><select id="cashCurrency">${currencies}</select><label>Amount</label><input id="cashAmount" type="number" min="0.01" placeholder="Amount"><label>Destination</label><select id="destination"><option>Bank account (not connected)</option><option>Mobile money (not connected)</option></select><button class="primary" onclick="cashDemo()">Simulate cash-out</button>`;
+if(type==='p2p')body=`<div class="notice">P2P is a workflow demonstration only. No escrow funds are held and no buyer or seller is matched.</div><label>Offer type</label><select id="offer"><option>Buy USDT</option><option>Sell USDT</option></select><label>Amount (USDT)</label><input id="p2pAmount" type="number" min="1" placeholder="Amount"><button class="primary" onclick="p2pDemo()">Create demo offer</button>`;
+content.innerHTML=`<div class="eyebrow">Sparrow Africa · Test</div><h2>${title}</h2><p class="sub">No real funds move in this prototype.</p>${body}`;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function addTx(title,amount,note,icon){transactions.unshift({title,amount,note,icon,date:new Date().toLocaleString()});renderTx();renderWallets()}
+function convert(){let f=document.getElementById('from').value,t=document.getElementById('to').value,a=Number(document.getElementById('amount').value);if(!a||a<=0)return toast('Enter a valid amount.');if(f===t)return toast('Choose two different currencies.');if(a>balances[f])return toast('Insufficient demo balance.');let result=a/usdRates[f]*usdRates[t];if(!Number.isFinite(result))return;balances[f]-=a;balances[t]+=result;addTx('Currency conversion',`-${money(a,f)}`,`Received ${money(result,t)}`,'⇄');closeModal();toast('Demo conversion completed.')}
+function sendDemo(){let n=document.getElementById('recipient').value.trim(),c=document.getElementById('sendCurrency').value,a=Number(document.getElementById('sendAmount').value);if(!n||!a||a<=0)return toast('Enter a recipient and valid amount.');if(a>balances[c])return toast('Insufficient demo balance.');balances[c]-=a;addTx('Test transfer to '+n,`-${money(a,c)}`,'Simulated · not sent','↗');closeModal();toast('Test transfer recorded. No money was sent.')}
+function cashDemo(){let c=document.getElementById('cashCurrency').value,a=Number(document.getElementById('cashAmount').value);if(!a||a<=0)return toast('Enter a valid amount.');if(a>balances[c])return toast('Insufficient demo balance.');balances[c]-=a;addTx('Cash-out simulation',`-${money(a,c)}`,'No bank or mobile payout','↓');closeModal();toast('Cash-out simulation recorded.')}
+function p2pDemo(){let typ=document.getElementById('offer').value,a=Number(document.getElementById('p2pAmount').value);if(!a||a<=0)return toast('Enter a valid amount.');addTx('P2P '+typ,`${a.toFixed(2)} USDT`,'Demo offer · no escrow','⇆');closeModal();toast('Demo P2P offer created. No escrow is active.')}
+renderWallets();renderTx();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
